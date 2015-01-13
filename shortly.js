@@ -65,6 +65,29 @@ app.get('/links', function(req, res) {
   });
 });
 
+app.get('/signup', function(req, res){
+  res.render('signup');
+});
+
+app.post('/signup', function(req, res){
+  var username = req.body.username;
+  var password = req.body.password;
+  var user = new User({username: username, password: password});
+  user.save().then(function(model){
+    console.log(model, ' is saved');
+  });
+  // .then(function(model){
+  //     console.log(model);
+  //   });
+  // Check if username exists
+    // if username exists have them choose a new username
+    // if username doesn't already exist (successful)
+      // Store username & password
+        // if successful delete old session
+          // give them a new session with new username
+        // if storing fails render signup page with Canadian error message
+});
+
 // creates a router for post requests to the /login route
 app.post('/login', function(req, res) {
   authHelpers.userExists(req, res); // this should console log the
