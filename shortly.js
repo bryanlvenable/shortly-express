@@ -3,7 +3,8 @@ var util = require('./lib/utility');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
 
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
+var session = require('express-session');
 
 
 var db = require('./app/config');
@@ -24,8 +25,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 // Cookie parser and session added because modules no-longer part of express
-app.use(cookieParser('jobsFinished'));
-app.use(express.session());
+// app.use(cookieParser('jobsFinished'));
+app.use(session({
+  secret: 'needMoreMinerals',
+  // resave: false, // dunno what this does...
+  // saveUnitialized: true // dunno what this does...
+}));
 
 // define restrict function
 var restrict = function(req, res, destination) {
@@ -43,8 +48,12 @@ var restrict = function(req, res, destination) {
 
 app.get('/',
 function(req, res) {
-  // res.render('index');
-  restrict(req, res, 'index');
+  var sess = req.session;
+  res.render('index');
+  console.log(sess);
+
+  // restrict(req, res, 'index'); save for session
+  // res.redirect('login');
 });
 
 app.get('/create',
@@ -96,7 +105,9 @@ function(req, res) {
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
-
+app.get('/login', function(req, res) {
+  res.render('login');
+});
 
 
 /************************************************************/

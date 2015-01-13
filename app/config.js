@@ -41,6 +41,9 @@ db.knex.schema.hasTable('clicks').then(function(exists) {
   }
 });
 
+/************************************************************/
+// Add additional schema definitions below
+/************************************************************/
 
 // Adds users Table
 db.knex.schema.hasTable('users').then(function(exists) {
@@ -55,10 +58,5 @@ db.knex.schema.hasTable('users').then(function(exists) {
     });
   }
 });
-
-/************************************************************/
-// Add additional schema definitions below
-/************************************************************/
-
 
 module.exports = db;
