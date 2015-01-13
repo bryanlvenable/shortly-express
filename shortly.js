@@ -3,6 +3,8 @@ var util = require('./lib/utility');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
 
+var cookieParser = require('cookie-parser');
+
 
 var db = require('./app/config');
 var Users = require('./app/collections/users');
@@ -21,26 +23,43 @@ app.use(bodyParser.json());
 // Parse forms (signup/login)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+// Cookie parser and session added because modules no-longer part of express
+app.use(cookieParser('jobsFinished'));
+app.use(express.session());
+
+// define restrict function
+var restrict = function(req, res, destination) {
+  // [Q] how does the user get on the session obj
+  if ( req.session.user ) {
+    res.render(destination);
+  } else {
+    req.session.error = 'Need more minerals (access denied)';
+    res.render('login');
+    // res.redirect('login');
+  }
+};
 
 
-app.get('/', 
+
+app.get('/',
+function(req, res) {
+  // res.render('index');
+  restrict(req, res, 'index');
+});
+
+app.get('/create',
 function(req, res) {
   res.render('index');
 });
 
-app.get('/create', 
-function(req, res) {
-  res.render('index');
-});
-
-app.get('/links', 
+app.get('/links',
 function(req, res) {
   Links.reset().fetch().then(function(links) {
     res.send(200, links.models);
   });
 });
 
-app.post('/links', 
+app.post('/links',
 function(req, res) {
   var uri = req.body.url;
 
