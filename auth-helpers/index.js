@@ -1,14 +1,14 @@
-var User = require('./app/models/user');
+var User = require('../app/models/user');
 
 
 
-// check's the session object on the request to see if there is a user attached
+// check' the session object on the request to see if there is a user attached
 exports.checkAuth = function(req, res, next) {
   // [Q] how does the user get on the session obj
   if ( req.session.user ) {
     next();
   } else {
-    req.session.error = 'Access Denied';
+    req.session.error = 'Need More Keyboards: Access Denied';
     res.redirect('login');
   }
 };

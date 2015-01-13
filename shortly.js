@@ -43,20 +43,20 @@ app.use(session({
 // if the user is not authenticated
   // redirect them to the login page
 
-app.get('/',
-function(req, res) {
-  var sess = req.session;
+app.get('/', function(req, res) {
+  authHelpers.checkAuth(req, res, function(){
+    res.render('index');
+  });
   // how do we attach username to session?
-  res.render('index');
-  console.log(sess);
-
+  // res.render('index');
+  // console.log(sess);
   // restrict(req, res, 'index'); save for session
   // res.redirect('login');
 });
 
-app.get('/create',
-function(req, res) {
-  res.render('index');
+app.get('/create', function(req, res) {
+
+  // res.render('index');
 });
 
 app.get('/links',
@@ -68,7 +68,7 @@ function(req, res) {
 
 // creates a router for post requests to the /login route
 app.post('/login', function(req, res) {
-  authHelpers.userExists(req, res); // this should console log the 
+  authHelpers.userExists(req, res); // this should console log the
 });
 
 app.post('/links',
