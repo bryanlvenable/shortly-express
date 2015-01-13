@@ -3,6 +3,9 @@ var util = require('./lib/utility');
 var partials = require('express-partials');
 var bodyParser = require('body-parser');
 
+// creates handy helper methods for authentication
+var authHelpers = require('auth-helpers');
+
 // var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
@@ -33,22 +36,17 @@ app.use(session({
 }));
 
 // define restrict function
-var restrict = function(req, res, destination) {
-  // [Q] how does the user get on the session obj
-  if ( req.session.user ) {
-    res.render(destination);
-  } else {
-    req.session.error = 'Need more minerals (access denied)';
-    res.render('login');
-    // res.redirect('login');
-  }
-};
 
 
+// if the user is already authenticated (check the session object)
+  // render the index.html
+// if the user is not authenticated
+  // redirect them to the login page
 
 app.get('/',
 function(req, res) {
   var sess = req.session;
+  // how do we attach username to session?
   res.render('index');
   console.log(sess);
 
@@ -66,6 +64,11 @@ function(req, res) {
   Links.reset().fetch().then(function(links) {
     res.send(200, links.models);
   });
+});
+
+// creates a router for post requests to the /login route
+app.post('/login', function(req, res) {
+  authHelpers.userExists(req, res); // this should console log the 
 });
 
 app.post('/links',
