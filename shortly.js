@@ -31,8 +31,8 @@ app.use(express.static(__dirname + '/public'));
 // app.use(cookieParser('jobsFinished'));
 app.use(session({
   secret: 'needMoreMinerals',
-  // resave: false, // dunno what this does...
-  // saveUnitialized: true // dunno what this does...
+  resave: false, // dunno what this does...
+  saveUninitialized: true // dunno what this does...
 }));
 
 // define restrict function
@@ -72,20 +72,21 @@ app.get('/signup', function(req, res){
 app.post('/signup', function(req, res){
   var username = req.body.username;
   var password = req.body.password;
-  var user = new User({username: username, password: password});
-  user.save().then(function(model){
-    console.log(model, ' is saved');
+  var user = new User({username: username});
+  user.query('where', 'username', '=', username).fetch().then(function(model){
+    if (model) {
+      console.log('username already exists');
+      res.render('signup');
+    } else {
+      new User({username: username, password: password}).save().then(function(model){
+        console.log('user model has been added to DB', model);
+        res.send(200);
+      });
+    }
   });
-  // .then(function(model){
-  //     console.log(model);
-  //   });
-  // Check if username exists
-    // if username exists have them choose a new username
-    // if username doesn't already exist (successful)
-      // Store username & password
-        // if successful delete old session
-          // give them a new session with new username
-        // if storing fails render signup page with Canadian error message
+  // if successful delete old session
+    // give them a new session with new username
+  // if storing fails render signup page with Canadian error message
 });
 
 // creates a router for post requests to the /login route

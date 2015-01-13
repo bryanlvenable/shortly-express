@@ -139,11 +139,9 @@ describe('', function() {
           db.knex('urls')
             .where('title', '=', 'Funny animal pictures, funny animals, funniest dogs')
             .then(function(urls) {
-              console.log('Here is urls: ', urls);
               if (urls['0'] && urls['0']['title']) {
                 var foundTitle = urls['0']['title'];
               }
-              console.log('Here is foundTitle: ', foundTitle);
               expect(foundTitle).to.equal('Funny animal pictures, funny animals, funniest dogs');
               done();
             });
@@ -253,6 +251,7 @@ describe('', function() {
       };
 
       request(options, function(error, res, body) {
+        // if (error) {throw new Error('something wrong with our request');}
         db.knex('users')
           .where('username', '=', 'Svnh')
           .then(function(res) {
