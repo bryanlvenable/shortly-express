@@ -47,22 +47,21 @@ app.get('/', function(req, res) {
   authHelpers.checkAuth(req, res, function(){
     res.render('index');
   });
-  // how do we attach username to session?
-  // res.render('index');
-  // console.log(sess);
-  // restrict(req, res, 'index'); save for session
-  // res.redirect('login');
 });
 
 app.get('/create', function(req, res) {
-
-  // res.render('index');
+  authHelpers.checkAuth(req, res, function(){
+    res.render('create');
+  });
 });
 
-app.get('/links',
-function(req, res) {
-  Links.reset().fetch().then(function(links) {
-    res.send(200, links.models);
+app.get('/links', function(req, res) {
+  // checking the Authorization on session
+  authHelpers.checkAuth(req, res, function() {
+    // Links.reset() will purge the local cache and then fetch all link records from db
+    Links.reset().fetch().then(function(links) {
+      res.send(200, links.models);
+    });
   });
 });
 
