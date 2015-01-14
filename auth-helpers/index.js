@@ -37,7 +37,10 @@ exports.loginAuth = function(req,res,next){
         if (model) {
           next();
         }
-        else {console.log('username and password dont match');}
+        else {
+          console.log('username and password dont match');
+          res.redirect('/login');
+        }
       });
   // var user = new User({username: username, password: password});
   // user.query('where', 'username', '=', username)
