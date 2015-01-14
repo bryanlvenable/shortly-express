@@ -1,4 +1,5 @@
 var User = require('../app/models/user');
+var session = require('express-session');
 
 
 
@@ -32,24 +33,16 @@ exports.loginAuth = function(req,res,next){
   var username = req.body.username;
   var password = req.body.password;
   var user = new User({username: username, password: password});
-      user.fetch()
-      .then(function(model){
-        if (model) {
-          next();
-        }
-        else {
-          console.log('username and password dont match');
-          res.redirect('/login');
-        }
-      });
-  // var user = new User({username: username, password: password});
-  // user.query('where', 'username', '=', username)
-  //     .fetch()
-  //     .then(function(model){
-  //       next();
-  //     });
-  // exports.userExists(req, res, function(){  // Will need to pass in arguments as we think of them
-  //   // I sit here wondering about the decision to use userExists
-  //   // At the moment, it doesn't sound like a good idea
-  // });
+  user.fetch()
+  .then(function(model){
+    if (model) {
+      // adds user property to session to track that the session is active
+      req.session.user = username;
+      next();
+    }
+    else {
+      console.log('username and password dont match');
+      res.redirect('/login');
+    }
+  });
 };

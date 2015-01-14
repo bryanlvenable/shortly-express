@@ -92,12 +92,12 @@ app.post('/signup', function(req, res){
   // if storing fails render signup page with Canadian error message
 });
 
+app.get('/login', function(req, res) {
+  res.render('login');
+});
+
 // creates a router for post requests to the /login route
 app.post('/login', function(req, res) {
-  // authHelpers.userExists(req, res); // this should console log the
-
-  // Call the login authorization helper function to authorize
-  // then redirect to the home page
   authHelpers.loginAuth(req, res, function(){
     res.redirect('/');
   });
@@ -140,9 +140,6 @@ function(req, res) {
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
-app.get('/login', function(req, res) {
-  res.render('login');
-});
 
 
 /************************************************************/
