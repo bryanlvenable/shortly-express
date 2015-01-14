@@ -70,17 +70,20 @@ app.get('/signup', function(req, res){
 });
 
 app.post('/signup', function(req, res){
+  // console.log('Reck dat body', req.body);
   var username = req.body.username;
   var password = req.body.password;
   var user = new User({username: username});
-  user.query('where', 'username', '=', username).fetch().then(function(model){
+  user.fetch().then(function(model){
     if (model) {
       console.log('username already exists');
       res.render('signup');
     } else {
       new User({username: username, password: password}).save().then(function(model){
         console.log('user model has been added to DB', model);
-        res.send(200);
+        // create a session
+        // redirect to index
+        res.redirect('/');
       });
     }
   });
@@ -91,7 +94,13 @@ app.post('/signup', function(req, res){
 
 // creates a router for post requests to the /login route
 app.post('/login', function(req, res) {
-  authHelpers.userExists(req, res); // this should console log the
+  // authHelpers.userExists(req, res); // this should console log the
+
+  // Call the login authorization helper function to authorize
+  // then redirect to the home page
+  authHelpers.loginAuth(req, res, function(){
+    res.redirect('/');
+  });
 });
 
 app.post('/links',
